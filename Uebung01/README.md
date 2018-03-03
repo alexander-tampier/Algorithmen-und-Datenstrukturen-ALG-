@@ -28,8 +28,88 @@ Grafik ausgegeben, Format ist frei wählbar.
 
 Klassendiagramm der Schnittstelle Map
 
-![map](https://user-images.githubusercontent.com/16546792/36937667-27c455b2-1f17-11e8-9e4b-1b4098364d0f.png)
+![map](https://user-images.githubusercontent.com/16546792/36937985-912a32f2-1f1b-11e8-99c1-966d7968d280.png)
 
+# Basicddea of HashMap
+
+Grundidee für die Implementierung der Hashtabelle
+
+ ```c++
+class HashEntry {
+  private:
+    int key;
+  int value;
+
+  public:
+    HashEntry(int key, int value) {
+      this - > key = key;
+      this - > value = value;
+    }
+
+  int getKey() {
+    return key;
+  }
+
+  int getValue() {
+    return value;
+  }
+};
+ ```
+ 
+Jeder Behälter beinhaltet Einträge einzelner Entries
+
+```c++
+const int TABLE_SIZE = 128;
+
+class HashMap {
+
+private:
+    HashEntry** table;
+
+public:
+    HashMap()
+    {
+        table = new HashEntry*[TABLE_SIZE];
+        for (int i = 0; i < TABLE_SIZE; i++)
+            table[i] = NULL;
+    }
+
+    int get(int key)
+    {
+        int hash = (key % TABLE_SIZE);
+        
+        while (table[hash] != NULL && table[hash]->getKey() != key)
+            hash = (hash + 1) % TABLE_SIZE;
+
+        if (table[hash] == NULL)
+            return -1;
+        else
+            return table[hash]->getValue();
+    }
+
+    void put(int key, int value)
+    {
+        int hash = (key % TABLE_SIZE);
+
+        while (table[hash] != NULL && table[hash]->getKey() != key)
+            hash = (hash + 1) % TABLE_SIZE;
+
+        if (table[hash] != NULL)
+            delete table[hash];
+
+        table[hash] = new HashEntry(key, value);
+    }
+
+    ~HashMap()
+    {
+        for (int i = 0; i < TABLE_SIZE; i++)
+            if (table[i] != NULL)
+                delete table[i];
+        delete[] table;
+    }
+};
+
+```
 
 # Contributors
 * Alexander Tampier

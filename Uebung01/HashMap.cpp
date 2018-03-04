@@ -6,7 +6,7 @@
 #define UEBUNG01_HASHMAP_H
 
 #include <cstddef>
-#include "HashEntry.h"
+#include "HashEntry.cpp"
 
 const int TABLE_SIZE = 128;
 

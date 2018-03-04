@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "HashEntry.h"
-#include "HashMap.h"
+#include "HashEntry.cpp"
+#include "HashMap.cpp"
 
 using namespace std;
 

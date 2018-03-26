@@ -19,19 +19,10 @@ class HashMap {
 
 public:
     //Constructor for initializing table with hashEntry array .. contains entries -> aktien
-    HashMap(unsigned int _hashSize = TABLE_SIZE) : hashSize(_hashSize) {
+    HashMap(unsigned int hashSize = TABLE_SIZE) : hashSize(hashSize) {
         table = new HashEntry<K, V> *[hashSize]();
         for (int i = 0; i < hashSize; i++){
             table[i] = NULL;
-        }
-    }
-
-    //Destructor for destroying all entries
-    ~HashMap() {
-        for (int i = 0; i < TABLE_SIZE; i++) {
-            if (table[i] != NULL)
-                delete table[i];
-            delete[] table;
         }
     }
 
@@ -41,10 +32,8 @@ public:
 
         quadraticProbing(key, hash);
 
-        cout << "PUT: hash: " << hash << endl;
-
         if (table[hash] != NULL)
-            delete table[hash];
+            table[hash] = NULL;
 
         table[hash] = new HashEntry<K, V>(key, value);
 
@@ -55,8 +44,6 @@ public:
         unsigned int hash = hashFunc(key) % hashSize;
 
         quadraticProbing(key, hash);
-
-        cout << "GET: hash: " << hash << endl;
 
         if (table[hash] == NULL)
             return NULL;
@@ -77,16 +64,13 @@ public:
             quadraticProbing(key, hash);
         }
 
-        cout << "ERASE: hash: " << hash << endl;
-
         if (table[hash] == NULL) {
-            cout << "No Element found at key " << key << endl;
             return;
         } else {
-            cout << "Element found at key " << key << endl;
+            table[hash] = nullptr;
+            //Free up the memory
             delete table[hash];
         }
-        cout << "Element Deleted" << endl;
     }
 
     unsigned int quadraticProbing(const K &key, unsigned int &hash) const {
@@ -97,6 +81,20 @@ public:
             i++;
         }
         return hash;
+    }
+
+    //Destructor for destroying all entries
+    ~HashMap() {
+        // destroy all buckets one by one
+        for (size_t i = 0; i < hashSize; ++i) {
+            HashEntry<K, V> *entry = table[i];
+
+            while (entry != NULL) {
+                delete entry;
+            }
+
+            table[i] = NULL;
+        }
     }
 
 private:

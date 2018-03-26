@@ -15,11 +15,11 @@ public:
         this->value = value;
     }
 
-    const K& getKey() const {
+    const K getKey() const {
         return key;
     }
 
-    const V& getValue() const {
+    const V getValue() const {
         return value;
     }
 

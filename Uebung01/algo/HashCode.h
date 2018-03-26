@@ -14,7 +14,7 @@ struct HashCode{
     {
         char *myString = const_cast<char *>(key.c_str());
 
-        int n = sizeof(myString) / sizeof(char) - 1;
+        int n = sizeof(myString) / sizeof(myString[0]) - 1;
 
         int hash = 0;
         //hash = s[0] + 31^(n-1) + s[1] + 31^(n-2) + ... + s[n-1]

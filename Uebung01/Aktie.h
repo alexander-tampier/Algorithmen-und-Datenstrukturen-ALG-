@@ -7,6 +7,7 @@
 
 
 #include <ctime>
+#include <ostream>
 
 class Aktie {
 private:
@@ -19,7 +20,11 @@ private:
     double adjClose;
 
 public:
-    char * getDate() const {
+    Aktie(){}
+
+    Aktie(int volume) : volume(volume) {}
+
+    char *getDate() const {
         return ctime(&date);
     }
 
@@ -73,6 +78,11 @@ public:
 
     void setAdjClose(double adjClose) {
         Aktie::adjClose = adjClose;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Aktie &aktie) {
+        os << "volume: " << aktie.volume;
+        return os;
     }
 };
 

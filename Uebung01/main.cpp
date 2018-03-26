@@ -1,5 +1,5 @@
-#include "HashMap.h"
-#include "Aktie.h"
+#include "algo/HashMap.h"
+#include "domain/Aktie.h"
 
 using namespace std;
 

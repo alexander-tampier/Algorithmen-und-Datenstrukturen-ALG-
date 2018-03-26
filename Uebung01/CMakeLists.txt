@@ -3,4 +3,4 @@ project(Uebung01)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Uebung01 main.cpp HashMap.h HashEntry.h Aktie.h)
+add_executable(Uebung01 main.cpp algo/HashMap.h algo/HashEntry.h domain/Aktie.h algo/HashCode.h)

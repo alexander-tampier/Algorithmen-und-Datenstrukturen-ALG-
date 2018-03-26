@@ -1,13 +1,10 @@
 //
-// Created by Alexander Tampier on 04.03.18.
+// Created by Alexander Tampier on 26.03.18.
 //
 
 #ifndef UEBUNG01_AKTIE_H
 #define UEBUNG01_AKTIE_H
 
-
-#include <ctime>
-#include <ostream>
 
 class Aktie {
 private:

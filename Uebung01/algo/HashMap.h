@@ -39,16 +39,19 @@ public:
 
     }
 
-    //get a related value for a specific key and modify memory address
-    V get(const K &key) {
+    //find a related value for a specific key and modify memory address
+    bool get(const K &key, V &value) {
         unsigned int hash = hashFunc(key) % hashSize;
 
         quadraticProbing(key, hash);
 
-        if (table[hash] == NULL)
-            return NULL;
-        else
-            return table[hash]->getValue();
+        if (table[hash]->getKey() == key)
+        {
+            value = table[hash]->getValue();
+            return true;
+        }
+
+        return false;
     }
 
     /**

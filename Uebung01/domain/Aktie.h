@@ -6,6 +6,8 @@
 #define UEBUNG01_AKTIE_H
 
 
+#include <ostream>
+
 class Aktie {
 private:
     time_t date;
@@ -17,9 +19,18 @@ private:
     double adjClose;
 
 public:
-    Aktie(){}
+    Aktie(time_t date, double open, double high, double low, double close, int volume, double adjClose) : date(date),
+                                                                                                          open(open),
+                                                                                                          high(high),
+                                                                                                          low(low),
+                                                                                                          close(close),
+                                                                                                          volume(volume),
+                                                                                                          adjClose(
+                                                                                                                  adjClose) {}
 
-    Aktie(int volume) : volume(volume) {}
+    Aktie() {
+
+    }
 
     char *getDate() const {
         return ctime(&date);
@@ -77,8 +88,9 @@ public:
         Aktie::adjClose = adjClose;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const Aktie &aktie) {
-        os << "volume: " << aktie.volume;
+    friend ostream &operator<<(ostream &os, const Aktie &aktie) {
+        os << "date: " << aktie.date << " open: " << aktie.open << " high: " << aktie.high << " low: " << aktie.low
+           << " close: " << aktie.close << " volume: " << aktie.volume << " adjClose: " << aktie.adjClose;
         return os;
     }
 };

@@ -12,14 +12,14 @@
 
 using namespace std;
 
-constexpr unsigned int TABLE_SIZE = 128;
+const int HASH_SIZE = 350;
 
 template<typename K, typename V, typename F = HashCode<K>>
 class HashMap {
 
 public:
     //Constructor for initializing table with hashEntry array .. contains entries -> aktien
-    HashMap(unsigned int hashSize = TABLE_SIZE) : hashSize(hashSize) {
+    HashMap(unsigned int hashSize = HASH_SIZE) : hashSize(hashSize) {
         table = new HashEntry<K, V> *[hashSize]();
         for (int i = 0; i < hashSize; i++){
             table[i] = NULL;
@@ -98,6 +98,14 @@ public:
 
             table[i] = NULL;
         }
+    }
+
+    HashEntry<K, V> **getTable() const {
+        return table;
+    }
+
+    const unsigned int getHashSize() const {
+        return hashSize;
     }
 
 private:

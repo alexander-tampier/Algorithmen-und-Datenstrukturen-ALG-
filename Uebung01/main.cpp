@@ -7,20 +7,20 @@ using namespace std;
 
 vector<StockEntry> readAktieFromCsv(const char *path);
 
+std::string getFileName(std::string filePath, bool withExtension = true, char seperator = '/');
+
 constexpr unsigned int HISTORY_SIZE = 30;
 
 int main() {
-    /*
-    hashMap.put("microsoft", Stock(25));
-    std::cout << hashMap.get("microsoft")<<endl;
-    hashMap.erase("microsoft");
-    std::cout << hashMap.get("microsoft")<<endl;
-     */
-
     HashMap<string, vector<StockEntry>> hashMap;
-    string key, path;
-    int choice;
+    HashEntry<string, vector<StockEntry>> ** table;
+    HashEntry<string, vector<StockEntry>> *entries;
+
+    string key;
     vector<StockEntry> value;
+
+    string path;
+    int choice;
 
     while (true) {
         cout << "\n----------------------" << endl;
@@ -36,7 +36,8 @@ int main() {
                 "Grafik ausgegeben, Format ist frei wählbar." << endl;
         cout << "6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab" << endl;
         cout << "7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei" << endl;
-        cout << "8. QUIT : Programm wird beendet" << endl;
+        cout << "8. PRINT Hashtable" << endl;
+        cout << "9. QUIT : Programm wird beendet" << endl;
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -54,11 +55,13 @@ int main() {
                 hashMap.erase(key);
                 break;
             case 3:
-                //TODO - IMPORT
                 cout << "Path from csv file: ";
                 cin >> path;
                 try {
-                    readAktieFromCsv(path.c_str());
+                    key = getFileName(path, false);
+                    value = readAktieFromCsv(path.c_str());
+
+                    hashMap.put(key, value);
                 } catch (const char *msg) {
                     cerr << msg << endl;
                 }
@@ -82,6 +85,18 @@ int main() {
             case 7:
                 //TODO - LOAD
             case 8:
+                table = hashMap.getTable();
+                for (size_t i = 0; i < hashMap.getHashSize(); ++i) {
+                    entries = table[i];
+                    if (entries != nullptr) {
+                        cout << "Key-> " << entries->getKey() << endl;
+                        for (StockEntry entry:entries->getValue())
+                            cout << "Value-> " << entry << endl;
+                    }
+                }
+
+                break;
+            case 9:
                 exit(1);
             default:
                 cout << "\nEnter correct option\n";
@@ -91,14 +106,7 @@ int main() {
     return 0;
 }
 
-vector<StockEntry> readAktieFromCsv(const char *path) {
-    /*
-    StockEntry *stockEntries = new StockEntry[HISTORY_SIZE];
-
-    for (int i = 0; i < HISTORY_SIZE; i++) {
-        stockEntries[i] = NULL;
-    }
-    */
+std::vector<StockEntry> readAktieFromCsv(const char *path) {
     std::ifstream file(path);
 
     if (!file) {
@@ -109,12 +117,30 @@ vector<StockEntry> readAktieFromCsv(const char *path) {
     string line;
     getline(file, line);
 
-    for(int i=0; i<30; i++){
+    for (int i = 0; i < 30; i++) {
         getline(file, line);
         if (!file)
             break;
-        stockEntries.push_back(StockEntry(line));
+        stockEntries.emplace_back(StockEntry(line));
     }
 
     return stockEntries;
+}
+
+/*
+ * Get File Name from a Path with or without extension
+ * call-by-value
+ */
+std::string getFileName(std::string filePath,
+                        bool withExtension,
+                        char seperator) {
+    // Get last dot position
+    std::size_t dotPos = filePath.rfind('.');
+    std::size_t sepPos = filePath.rfind(seperator);
+
+    if (sepPos != std::string::npos) {
+        return filePath.substr(sepPos + 1,
+                               filePath.size() - (withExtension || dotPos == std::string::npos ? 1 : dotPos));
+    }
+    return "";
 }

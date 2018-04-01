@@ -1,37 +1,38 @@
 #include <fstream>
+#include <vector>
 #include "algo/HashMap.h"
-#include "domain/Aktie.h"
+#include "domain/StockEntry.h"
 
 using namespace std;
 
-Aktie *readAktieFromCsv(const char *path);
+vector<StockEntry> readAktieFromCsv(const char *path);
 
 constexpr unsigned int HISTORY_SIZE = 30;
 
 int main() {
     /*
-    hashMap.put("microsoft", Aktie(25));
+    hashMap.put("microsoft", Stock(25));
     std::cout << hashMap.get("microsoft")<<endl;
     hashMap.erase("microsoft");
     std::cout << hashMap.get("microsoft")<<endl;
      */
 
-    HashMap<string, Aktie> hashMap;
+    HashMap<string, vector<StockEntry>> hashMap;
     string key, path;
     int choice;
-    Aktie value;
+    vector<StockEntry> value;
 
-    while (1) {
+    while (true) {
         cout << "\n----------------------" << endl;
         cout << "Operations on Hash Table" << endl;
         cout << "\n----------------------" << endl;
-        cout << "1. ADD: Eine Aktie mit Namen, WKN und Kürzel wird hinzugefügt." << endl;
-        cout << "2. DEL:Aktie wird gelöscht." << endl;
-        cout << "3. IMPORT: Kurswerte für eine Aktie werden aus einer csv Datei importiert" << endl;
-        cout << "4. SEARCH: Eine Aktie wird in der Hashtabelle gesucht (Eingabe von Namen\n"
+        cout << "1. ADD: Eine Stock mit Namen, WKN und Kürzel wird hinzugefügt." << endl;
+        cout << "2. DEL:Stock wird gelöscht." << endl;
+        cout << "3. IMPORT: Kurswerte für eine Stock werden aus einer csv Datei importiert" << endl;
+        cout << "4. SEARCH: Eine Stock wird in der Hashtabelle gesucht (Eingabe von Namen\n"
                 "oder Kürzel) und der aktuellste Kurseintrag\n"
                 "(Date,Open,High,Low,Close,Volume,Adj Close) wird ausgegeben." << endl;
-        cout << "5. PLOT: Die Schlusskurse der letzten 30 Tage einer Aktie werden als ASCII\n"
+        cout << "5. PLOT: Die Schlusskurse der letzten 30 Tage einer Stock werden als ASCII\n"
                 "Grafik ausgegeben, Format ist frei wählbar." << endl;
         cout << "6. SAVE <filename>: Programm speichert die Hashtabelle in eine Datei ab" << endl;
         cout << "7. LOAD <filename>: Programm lädt die Hashtabelle aus einer Datei" << endl;
@@ -58,7 +59,7 @@ int main() {
                 cin >> path;
                 try {
                     readAktieFromCsv(path.c_str());
-                }catch(const char* msg){
+                } catch (const char *msg) {
                     cerr << msg << endl;
                 }
                 break;
@@ -71,7 +72,7 @@ int main() {
                     continue;
                 } else {
                     cout << "Element at key " << key << " : ";
-                    cout << value << endl;
+                    //cout << value << endl;
                 }
                 break;
             case 5:
@@ -90,18 +91,30 @@ int main() {
     return 0;
 }
 
-Aktie *readAktieFromCsv(const char *path) {
-    Aktie *aktie = new Aktie[HISTORY_SIZE];
+vector<StockEntry> readAktieFromCsv(const char *path) {
+    /*
+    StockEntry *stockEntries = new StockEntry[HISTORY_SIZE];
 
     for (int i = 0; i < HISTORY_SIZE; i++) {
-        aktie[i] = NULL;
+        stockEntries[i] = NULL;
     }
+    */
+    std::ifstream file(path);
 
-    ifstream csv(path);
-
-    if (!csv) {
+    if (!file) {
         throw "Import-error";
     }
 
-    return aktie;
+    vector<StockEntry> stockEntries;
+    string line;
+    getline(file, line);
+
+    for(int i=0; i<30; i++){
+        getline(file, line);
+        if (!file)
+            break;
+        stockEntries.push_back(StockEntry(line));
+    }
+
+    return stockEntries;
 }

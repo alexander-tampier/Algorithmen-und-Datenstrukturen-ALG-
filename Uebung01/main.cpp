@@ -6,8 +6,8 @@
 using namespace std;
 
 vector<StockEntry> readAktieFromCsv(const char *path);
-
 std::string getFileName(std::string filePath, bool withExtension = true, char seperator = '/');
+vector<StockEntry> insertElement();
 
 constexpr unsigned int HISTORY_SIZE = 30;
 
@@ -43,8 +43,8 @@ int main() {
 
         switch (choice) {
             case 1:
-                cout << "Enter element to be inserted: ";
-                //cin >> value;
+                cout << "Enter element to be inserted"<<endl;
+                value = insertElement();
                 cout << "Enter key at which element to be inserted: ";
                 cin >> key;
                 hashMap.put(key, value);
@@ -75,7 +75,7 @@ int main() {
                     continue;
                 } else {
                     cout << "Element at key " << key << " : ";
-                    //cout << value << endl;
+                    cout << value.front() << endl;
                 }
                 break;
             case 5:
@@ -143,4 +143,16 @@ std::string getFileName(std::string filePath,
                                filePath.size() - (withExtension || dotPos == std::string::npos ? 1 : dotPos));
     }
     return "";
+}
+
+vector<StockEntry> insertElement(){
+    vector<StockEntry> stockEntries;
+    StockEntry stockEntry;
+    string userInput;
+    cout << "Enter WKN: ";
+    cin >> userInput;
+    stockEntry.setWkn(userInput);
+    stockEntries.emplace_back(stockEntry);
+
+    return stockEntries;
 }

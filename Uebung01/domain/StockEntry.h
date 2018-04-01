@@ -14,6 +14,7 @@
 using namespace std;
 
 class StockEntry {
+    string wkn;
     string date;
     double open;
     double high;
@@ -24,9 +25,10 @@ class StockEntry {
 
 public:
 
-    StockEntry(){}
+    StockEntry() {}
 
     StockEntry(string csvLine) {
+        wkn = "";
         date = "";
         open = 0;
         high = 0;
@@ -47,9 +49,42 @@ public:
         csvStream >> adjClose;
     }
 
-    friend std::ostream &operator<<(std::ostream &os, const StockEntry &entry) {
-        os << "date: " << entry.date << " open: " << entry.open << " high: " << entry.high << " low: " << entry.low
-           << " close: " << entry.close << " volume: " << entry.volume << " adjClose: " << entry.adjClose;
+    void setWkn(const string &wkn) {
+        StockEntry::wkn = wkn;
+    }
+
+    void setDate(const string &date) {
+        StockEntry::date = date;
+    }
+
+    void setOpen(double open) {
+        StockEntry::open = open;
+    }
+
+    void setHigh(double high) {
+        StockEntry::high = high;
+    }
+
+    void setLow(double low) {
+        StockEntry::low = low;
+    }
+
+    void setClose(double close) {
+        StockEntry::close = close;
+    }
+
+    void setVolume(int volume) {
+        StockEntry::volume = volume;
+    }
+
+    void setAdjClose(double adjClose) {
+        StockEntry::adjClose = adjClose;
+    }
+
+    friend ostream &operator<<(ostream &os, const StockEntry &entry) {
+        os << "wkn: " << entry.wkn << " date: " << entry.date << " open: " << entry.open << " high: " << entry.high
+           << " low: " << entry.low << " close: " << entry.close << " volume: " << entry.volume << " adjClose: "
+           << entry.adjClose;
         return os;
     }
 };

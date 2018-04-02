@@ -10,6 +10,8 @@ template<typename K, typename V>
 class HashEntry {
 
 public:
+    HashEntry() {}
+
     HashEntry(const K &key, const V &value) {
         this->key = key;
         this->value = value;

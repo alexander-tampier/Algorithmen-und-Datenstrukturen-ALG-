@@ -8,12 +8,16 @@
 #include <iostream>
 
 // Default hash function class
-template <typename K>
-struct HashCode{
-    unsigned int operator()(const K &key) const
-    {
+template<typename K>
+struct HashCode {
+    /*   Function: Computes and returns a hash map key index for a given item
+    *               The returned key index is the given cell where the item resides
+    */
+    unsigned int operator()(const K &key) const {
+        /*
         char *myString = const_cast<char *>(key.c_str());
 
+        // -1 because of empty field at the end \0
         int n = sizeof(myString) / sizeof(myString[0]) - 1;
 
         int hash = 0;
@@ -23,6 +27,14 @@ struct HashCode{
             hash = 31 * hash + (int) myString[i];
         }
 
+        return hash;
+         */
+        char *myString = const_cast<char *>(key.c_str());
+        // -1 because of empty field at the end \0
+        int n = sizeof(myString) / sizeof(myString[0]) - 1;
+        int hash = 0;
+        for (int i = 0; i < n; i++)
+            hash += static_cast<int>(myString[i]);
         return hash;
     }
 };

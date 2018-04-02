@@ -12,30 +12,40 @@
 
 using namespace std;
 
-constexpr unsigned int TABLE_SIZE = 128;
+const int HASH_SIZE = 2;
 
 template<typename K, typename V, typename F = HashCode<K>>
 class HashMap {
 
 public:
-    //Constructor for initializing table with hashEntry array .. contains entries -> aktien
-    HashMap(unsigned int hashSize = TABLE_SIZE) : hashSize(hashSize) {
-        table = new HashEntry<K, V> *[hashSize]();
+    //Constructor for initializing bucket with hashEntry array .. contains entries -> aktien
+    HashMap(unsigned int hashSize = HASH_SIZE) : hashSize(hashSize) {
+        deletedPointer = new HashEntry<K,V>();
+        bucket = new HashEntry<K, V> *[hashSize]();
         for (int i = 0; i < hashSize; i++){
-            table[i] = NULL;
+            bucket[i] = NULL;
         }
     }
 
-    //insert key, value to map
+    /*   Function: Adds new item to the back of the list at a given key in the hash map
+     * */
     void put(const K &key, const V &value) {
         unsigned int hash = hashFunc(key) % hashSize;
 
-        quadraticProbing(key, hash);
+        if(bucket[hash]!=NULL){
+            int i = 1;
+            while ( bucket[hash] != NULL && bucket[hash]->getKey() != key && bucket[hash] != deletedPointer) {
+                //Quadratic probing
+                hash = (hash + i * i) % hashSize;
+                i++;
+            }
+        }
 
-        if (table[hash] != NULL)
-            table[hash] = NULL;
+        //Update record
+        if (bucket[hash] != NULL || bucket[hash] == deletedPointer)
+            bucket[hash] = NULL;
 
-        table[hash] = new HashEntry<K, V>(key, value);
+        bucket[hash] = new HashEntry<K, V>(key, value);
 
     }
 
@@ -43,42 +53,56 @@ public:
     bool get(const K &key, V &value) {
         unsigned int hash = hashFunc(key) % hashSize;
 
-        quadraticProbing(key, hash);
+        int counter = 0;
 
-        if (table[hash]->getKey() == key)
+        if(bucket[hash]!=NULL){
+            int i = 1;
+            while ( bucket[hash] != NULL && bucket[hash]->getKey() != key) {
+                //Quadratic probing
+                hash = (hash + i * i) % hashSize;
+                i++;
+
+                //Collision detection - Every time: O(n)
+                if(counter==hashSize-1)
+                    return false;
+                counter++;
+            }
+        }
+
+        if (bucket[hash]->getKey() == key)
         {
-            value = table[hash]->getValue();
+            value = bucket[hash]->getValue();
             return true;
         }
 
+        //No Collision, field is null
         return false;
     }
 
     /**
-     * Remove element at a key
+     * Removes the instance from the map
      * @param key
      */
     void erase(const K &key) {
         int i = 1;
         unsigned int hash = hashFunc(key) % hashSize;
-        while (table[hash] != NULL) {
-            if (table[hash]->getKey() == key)
+        while (bucket[hash] != NULL) {
+            if (bucket[hash]->getKey() == key)
                 break;
             quadraticProbing(key, hash);
         }
 
-        if (table[hash] == NULL) {
+        if (bucket[hash] == NULL) {
             return;
         } else {
-            table[hash] = nullptr;
-            //Free up the memory
-            delete table[hash];
+            delete bucket[hash];
+            bucket[hash] = deletedPointer;
         }
     }
 
     unsigned int quadraticProbing(const K &key, unsigned int &hash) const {
         int i = 1;
-        while (table[hash] != NULL && table[hash]->getKey() != key) {
+        while ( bucket[hash] != NULL && bucket[hash]->getKey() != key) {
             //Quadratic probing
             hash = (hash + i * i) % hashSize;
             i++;
@@ -90,18 +114,33 @@ public:
     ~HashMap() {
         // destroy all buckets one by one
         for (size_t i = 0; i < hashSize; ++i) {
-            HashEntry<K, V> *entry = table[i];
+            HashEntry<K, V> *entry = bucket[i];
 
             while (entry != NULL) {
                 delete entry;
             }
 
-            table[i] = NULL;
+            bucket[i] = NULL;
         }
+
+        delete deletedPointer;
+    }
+
+    HashEntry<K, V> **getTable() const {
+        return bucket;
+    }
+
+    const unsigned int getHashSize() const {
+        return hashSize;
+    }
+
+    HashEntry<K, V> *getDeletedPointer() const {
+        return deletedPointer;
     }
 
 private:
-    HashEntry<K, V> **table;
+    HashEntry<K, V> *deletedPointer;
+    HashEntry<K, V> **bucket;
     F hashFunc;
     const unsigned int hashSize;
 };

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-const int HASH_SIZE = 350;
+const int HASH_SIZE = 2;
 
 template<typename K, typename V, typename F = HashCode<K>>
 class HashMap {
@@ -20,6 +20,7 @@ class HashMap {
 public:
     //Constructor for initializing bucket with hashEntry array .. contains entries -> aktien
     HashMap(unsigned int hashSize = HASH_SIZE) : hashSize(hashSize) {
+        deletedPointer = new HashEntry<K,V>();
         bucket = new HashEntry<K, V> *[hashSize]();
         for (int i = 0; i < hashSize; i++){
             bucket[i] = NULL;
@@ -31,9 +32,17 @@ public:
     void put(const K &key, const V &value) {
         unsigned int hash = hashFunc(key) % hashSize;
 
-        quadraticProbing(key, hash);
+        if(bucket[hash]!=NULL){
+            int i = 1;
+            while ( bucket[hash] != NULL && bucket[hash]->getKey() != key && bucket[hash] != deletedPointer) {
+                //Quadratic probing
+                hash = (hash + i * i) % hashSize;
+                i++;
+            }
+        }
 
-        if (bucket[hash] != NULL)
+        //Update record
+        if (bucket[hash] != NULL || bucket[hash] == deletedPointer)
             bucket[hash] = NULL;
 
         bucket[hash] = new HashEntry<K, V>(key, value);
@@ -44,7 +53,21 @@ public:
     bool get(const K &key, V &value) {
         unsigned int hash = hashFunc(key) % hashSize;
 
-        quadraticProbing(key, hash);
+        int counter = 0;
+
+        if(bucket[hash]!=NULL){
+            int i = 1;
+            while ( bucket[hash] != NULL && bucket[hash]->getKey() != key) {
+                //Quadratic probing
+                hash = (hash + i * i) % hashSize;
+                i++;
+
+                //Collision detection - Every time: O(n)
+                if(counter==hashSize-1)
+                    return false;
+                counter++;
+            }
+        }
 
         if (bucket[hash]->getKey() == key)
         {
@@ -52,6 +75,7 @@ public:
             return true;
         }
 
+        //No Collision, field is null
         return false;
     }
 
@@ -71,15 +95,14 @@ public:
         if (bucket[hash] == NULL) {
             return;
         } else {
-            bucket[hash] = nullptr;
-            //Free up the memory
             delete bucket[hash];
+            bucket[hash] = deletedPointer;
         }
     }
 
     unsigned int quadraticProbing(const K &key, unsigned int &hash) const {
         int i = 1;
-        while (bucket[hash] != NULL && bucket[hash]->getKey() != key) {
+        while ( bucket[hash] != NULL && bucket[hash]->getKey() != key) {
             //Quadratic probing
             hash = (hash + i * i) % hashSize;
             i++;
@@ -99,6 +122,8 @@ public:
 
             bucket[i] = NULL;
         }
+
+        delete deletedPointer;
     }
 
     HashEntry<K, V> **getTable() const {
@@ -109,7 +134,12 @@ public:
         return hashSize;
     }
 
+    HashEntry<K, V> *getDeletedPointer() const {
+        return deletedPointer;
+    }
+
 private:
+    HashEntry<K, V> *deletedPointer;
     HashEntry<K, V> **bucket;
     F hashFunc;
     const unsigned int hashSize;

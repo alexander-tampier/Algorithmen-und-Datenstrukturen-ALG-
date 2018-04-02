@@ -88,7 +88,7 @@ int main() {
                 table = hashMap.getTable();
                 for (size_t i = 0; i < hashMap.getHashSize(); ++i) {
                     entries = table[i];
-                    if (entries != nullptr) {
+                    if (entries != nullptr && entries != hashMap.getDeletedPointer() ) {
                         cout << "Key-> " << entries->getKey() << endl;
                         for (StockEntry entry:entries->getValue())
                             cout << "Value-> " << entry << endl;
@@ -108,6 +108,7 @@ int main() {
 
 std::vector<StockEntry> readAktieFromCsv(const char *path) {
     std::ifstream file(path);
+    StockEntry stockEntry;
 
     if (!file) {
         throw "Import-error";

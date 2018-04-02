@@ -24,11 +24,19 @@ class StockEntry {
     double adjClose;
 
 public:
-
-    StockEntry() {}
+    // user-defined default constructor
+    StockEntry() {
+        setWkn("");
+        setDate("");
+        setOpen(0.0);
+        setHigh(0.0);
+        setLow(0.0);
+        setClose(0.0);
+        setVolume(0);
+        setAdjClose(0.0);
+    }
 
     StockEntry(string csvLine) {
-        wkn = "";
         date = "";
         open = 0;
         high = 0;
@@ -82,9 +90,14 @@ public:
     }
 
     friend ostream &operator<<(ostream &os, const StockEntry &entry) {
-        os << "wkn: " << entry.wkn << " date: " << entry.date << " open: " << entry.open << " high: " << entry.high
-           << " low: " << entry.low << " close: " << entry.close << " volume: " << entry.volume << " adjClose: "
-           << entry.adjClose;
+
+        if(entry.wkn!="")
+            os << "wkn: " << entry.wkn;
+        else {
+            os << "date: " << entry.date << " open: " << entry.open << " high: " << entry.high
+               << " low: " << entry.low << " close: " << entry.close << " volume: " << entry.volume << " adjClose: "
+               << entry.adjClose;
+        }
         return os;
     }
 };

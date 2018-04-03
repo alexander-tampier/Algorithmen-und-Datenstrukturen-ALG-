@@ -6,10 +6,8 @@
 using namespace std;
 
 vector<StockEntry> readAktieFromCsv(const char *path);
-std::string getFileName(std::string filePath, bool withExtension = true, char seperator = '/');
+std::string splitFilename(const std::string &path);
 vector<StockEntry> insertElement();
-
-constexpr unsigned int HISTORY_SIZE = 30;
 
 int main() {
     HashMap<string, vector<StockEntry>> hashMap;
@@ -58,7 +56,8 @@ int main() {
                 cout << "Path from csv file: ";
                 cin >> path;
                 try {
-                    key = getFileName(path, false);
+                    //key = getFileName(path, false);
+                    key = splitFilename(path);
                     value = readAktieFromCsv(path.c_str());
 
                     hashMap.put(key, value);
@@ -130,20 +129,12 @@ std::vector<StockEntry> readAktieFromCsv(const char *path) {
 
 /*
  * Get File Name from a Path with or without extension
- * call-by-value
+ * call-by-reference
  */
-std::string getFileName(std::string filePath,
-                        bool withExtension,
-                        char seperator) {
-    // Get last dot position
-    std::size_t dotPos = filePath.rfind('.');
-    std::size_t sepPos = filePath.rfind(seperator);
-
-    if (sepPos != std::string::npos) {
-        return filePath.substr(sepPos + 1,
-                               filePath.size() - (withExtension || dotPos == std::string::npos ? 1 : dotPos));
-    }
-    return "";
+std::string splitFilename(const std::string &path) {
+    unsigned found = path.find_last_of("/\\");
+    std::size_t dotPos = path.rfind('.');
+    return path.substr(found+1, path.size()-dotPos);
 }
 
 vector<StockEntry> insertElement(){

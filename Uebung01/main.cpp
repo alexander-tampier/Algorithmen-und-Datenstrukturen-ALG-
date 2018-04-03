@@ -79,10 +79,13 @@ int main() {
                 break;
             case 5:
                 //TODO - PLOT
+                break;
             case 6:
                 //TODO - SAVE
+                break;
             case 7:
                 //TODO - LOAD
+                break;
             case 8:
                 table = hashMap.getTable();
                 for (size_t i = 0; i < hashMap.getHashSize(); ++i) {

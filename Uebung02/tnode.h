@@ -8,10 +8,15 @@
 #endif //UEBUNG02_TNODE_H
 
 
-class tnode{
+class tnode {
 
 public:
-    tnode(int key, tnode *left, tnode *right) : key(key=0), left(left=nullptr), right(right=nullptr) {}
+
+    tnode() {
+        key = 0;
+        left = nullptr;
+        right = nullptr;
+    }
 
     int getKey() const {
         return key;
@@ -39,6 +44,6 @@ public:
 
 private:
     int key;
-    struct tnode *left;
-    struct tnode *right;
+    tnode *left;
+    tnode *right;
 };

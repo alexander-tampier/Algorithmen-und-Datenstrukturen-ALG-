@@ -11,14 +11,52 @@
 #include <vector>
 #include "tnode.h"
 
-class binaryTree {
-private:
-    tnode *head;
+using namespace std;
 
+class binaryTree {
 public:
-    static void readFromFile(const char *path) {
-        std::vector<int> numbers;
-        std::ifstream file(path);
+
+    binaryTree(const vector<int> &keys) : keys(keys) {
+        this->keys = keys;
+        this->head->setKey(keys.front());
+        this->keys.erase(keys.begin());
+    }
+
+    virtual ~binaryTree() {
+        head = nullptr;
+        delete head;
+    }
+
+    struct tnode* newNode(int key)
+    {
+        struct tnode* temp = new tnode;
+        temp->setKey(key);
+        temp->setLeft(NULL);
+        temp->setRight(NULL);
+
+        return temp;
+    };
+
+    /*
+     * head: cached head at current position
+     * key: given value to insert into tree
+     */
+    void insert(tnode *head, int key){
+
+        if(head==NULL){
+            newNode(key);
+        }
+        
+        if(this->head->getKey() > key){
+            insert(this->head->getLeft(), key);
+        }else{
+            insert(this->head->getRight(), key);
+        }
+    }
+
+    static vector<int> readFromFile(const char *path) {
+        vector<int> numbers;
+        ifstream file(path);
         int number;
 
         if (!file)
@@ -27,9 +65,12 @@ public:
         while (file >> number)
             numbers.push_back(number);
 
-        for (int &number:numbers)
-            std::cout << number << std::endl;
+        return numbers;
     }
+
+private:
+    tnode *head;
+    vector<int> keys;
 
 };
 

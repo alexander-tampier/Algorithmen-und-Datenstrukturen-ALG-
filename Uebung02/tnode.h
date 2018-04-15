@@ -5,8 +5,7 @@
 #ifndef UEBUNG02_TNODE_H
 #define UEBUNG02_TNODE_H
 
-#endif //UEBUNG02_TNODE_H
-
+using namespace std;
 
 class tnode {
 
@@ -14,8 +13,8 @@ public:
 
     tnode() {
         key = 0;
-        left = nullptr;
-        right = nullptr;
+        left = NULL;
+        right = NULL;
     }
 
     int getKey() const {
@@ -47,3 +46,6 @@ private:
     tnode *left;
     tnode *right;
 };
+
+
+#endif //UEBUNG02_TNODE_H

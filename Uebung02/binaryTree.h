@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <iomanip>
 #include "tnode.h"
 
 using namespace std;
@@ -17,19 +18,28 @@ class binaryTree {
 public:
 
     binaryTree(const vector<int> &keys) : keys(keys) {
+        this->root = new tnode();
         this->keys = keys;
-        this->head->setKey(keys.front());
-        this->keys.erase(keys.begin());
+
+        initialize();
     }
 
     virtual ~binaryTree() {
-        head = nullptr;
-        delete head;
+        root = nullptr;
+        delete root;
     }
 
-    struct tnode* newNode(int key)
-    {
-        struct tnode* temp = new tnode;
+    void initialize() {
+        this->root->setKey(keys.front());
+        this->keys.erase(keys.begin());
+
+        for (int &key:this->keys) {
+            insert(this->root, key);
+        }
+    }
+
+    struct tnode *newNode(int key) {
+        struct tnode *temp = new tnode;
         temp->setKey(key);
         temp->setLeft(NULL);
         temp->setRight(NULL);
@@ -38,19 +48,37 @@ public:
     };
 
     /*
-     * head: cached head at current position
+     * root: cached root at current position
      * key: given value to insert into tree
      */
-    void insert(tnode *head, int key){
-
-        if(head==NULL){
-            newNode(key);
+    void insert(tnode *current, int key) {
+        if (current->getKey() > key) {
+            if(current->getLeft()!=NULL)
+                insert(current->getLeft(), key);
+            else
+                current->setLeft(newNode(key));
+        } else if (current->getKey() < key) {
+            if(current->getRight()!=NULL)
+                insert(current->getRight(), key);
+            else
+                current->setRight(newNode(key));
         }
-        
-        if(this->head->getKey() > key){
-            insert(this->head->getLeft(), key);
-        }else{
-            insert(this->head->getRight(), key);
+    }
+
+    void postorder(tnode *p, int indent) {
+        if (p != NULL) {
+            if (p->getRight()) {
+                postorder(p->getRight(), indent + 4);
+            }
+            if (indent) {
+                std::cout << std::setw(indent) << ' ';
+            }
+            if (p->getRight()) std::cout << " /\n" << std::setw(indent) << ' ';
+            std::cout << p->getKey() << "\n ";
+            if (p->getLeft()) {
+                std::cout << std::setw(indent) << ' ' << " \\\n";
+                postorder(p->getLeft(), indent + 4);
+            }
         }
     }
 
@@ -68,8 +96,12 @@ public:
         return numbers;
     }
 
+    tnode *getHead() const {
+        return root;
+    }
+
 private:
-    tnode *head;
+    tnode *root;
     vector<int> keys;
 
 };

@@ -12,7 +12,7 @@
 
 using namespace std;
 
-const int HASH_SIZE = 128;
+const int HASH_SIZE = 1499;
 
 template<typename K, typename V, typename F = HashCode<K>>
 class HashMap {

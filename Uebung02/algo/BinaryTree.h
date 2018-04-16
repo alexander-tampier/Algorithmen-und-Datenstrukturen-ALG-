@@ -205,9 +205,9 @@ public:
     friend ostream &operator<<(ostream &os, BinaryTree &tree) {
         string avl = tree.isAvl() ? "yes" : "no";
         os << "avl: " << avl << endl;
-        os << "min: " << tree.findMin(tree.getRoot())<<endl;
-        os << "max: " << tree.findMax(tree.getRoot())<<endl;
-        os << "average: " << tree.getAverage(tree.getRoot())<<endl;
+        os << "min: " << tree.findMin(tree.getRoot())<<", ";
+        os << "max: " << tree.findMax(tree.getRoot())<<", ";
+        os << "average: " << tree.getAverage(tree.getRoot());
         return os;
     }
 

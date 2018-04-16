@@ -1,5 +1,5 @@
 #include <iostream>
-#include "BinaryTree.h"
+#include "algo/BinaryTree.h"
 
 int main() {
     std::string path;
@@ -7,7 +7,7 @@ int main() {
     std::cin >> path;
     vector<int> values = BinaryTree::readFromFile(path.c_str());
     BinaryTree binaryTree(values);
-    //binaryTree.print2D(binaryTree.getRoot());
+    binaryTree.printTree(binaryTree.getRoot(),0);
     binaryTree.getBalance(binaryTree.getRoot());
     cout<<binaryTree<<endl;
 

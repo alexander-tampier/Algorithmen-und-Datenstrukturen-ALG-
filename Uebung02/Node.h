@@ -7,14 +7,19 @@
 
 using namespace std;
 
-class tnode {
+class Node {
 
 public:
 
-    tnode() {
+    Node() {
         key = 0;
         left = NULL;
         right = NULL;
+    }
+
+    virtual ~Node() {
+        if(left) delete left;
+        if(right) delete right;
     }
 
     int getKey() const {
@@ -22,29 +27,29 @@ public:
     }
 
     void setKey(int key) {
-        tnode::key = key;
+        Node::key = key;
     }
 
-    tnode *getLeft() const {
+    Node *getLeft() const {
         return left;
     }
 
-    void setLeft(tnode *left) {
-        tnode::left = left;
+    void setLeft(Node *left) {
+        Node::left = left;
     }
 
-    tnode *getRight() const {
+    Node *getRight() const {
         return right;
     }
 
-    void setRight(tnode *right) {
-        tnode::right = right;
+    void setRight(Node *right) {
+        Node::right = right;
     }
 
 private:
     int key;
-    tnode *left;
-    tnode *right;
+    Node *left;
+    Node *right;
 };
 
 

@@ -3,4 +3,4 @@ project(Uebung02)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Uebung02 main.cpp binaryTree.h tnode.h)
+add_executable(Uebung02 main.cpp BinaryTree.h Node.h)

@@ -147,47 +147,66 @@ public:
         return currentResult;
     }
 
-    /*
+    /**
      * Get the arithmetic mean of the BST
+     *
+     * @param root - root node of a given BST
+     * @return the arithmetic mean
      */
     double getAverage(Node *root){
         return (double)sum(root)/getElements(root);
     }
 
-    /*
+    /**
      * Get the number of elements the BST has
+     *
+     * @param current - node where to start counting all realted elements
+     * @return the value of all nodes related to the given root node
      */
     int getElements(Node *current){
         if(!current) return 0;
         return 1 + getElements(current->getRight()) + getElements(current->getLeft());
     }
 
-    /*
+    /**
      * Calculates the sum from the given node element
+     *
+     * @param current - the point where to start summarizing the values
+     * @return the sum of all related nodes from the given root node
      */
     int sum(Node *current){
         if(!current) return 0;
         return current->getKey() + sum(current->getRight()) + sum(current->getLeft());
     }
 
-    void printTree(struct Node* curr,int depth)
+    /**
+     * print the binary search tree as folder structure
+     *
+     * @param current node where the BST should be printed from
+     * @param depth depth of the BST
+     */
+    void printTree(struct Node* current, int depth=0)
     {
-
         int i;
-        if(curr==NULL)return;
+        if(current==NULL)return;
         printf("\t");
         for(i=0;i<depth;i++)
             if(i==depth-1)
                 printf("%s\u2014\u2014\u2014",rec[depth-1]?"\u0371":"\u221F");
             else
                 printf("%s   ",rec[i]?"\u23B8":"  ");
-        printf("%d\n",curr->getKey());
+        printf("%d\n",current->getKey());
         rec[depth]=1;
-        printTree(curr->getLeft(),depth+1);
+        printTree(current->getLeft(),depth+1);
         rec[depth]=0;
-        printTree(curr->getRight(),depth+1);
+        printTree(current->getRight(),depth+1);
     }
 
+    /**
+     * Reads a given file with specified numbers and returns the numbers stored in a vector
+     * @param path - reads the given path to the file
+     * @return vector<int> that contains the given key values for the BST
+     */
     static vector<int> readFromFile(const char *path) {
         vector<int> numbers;
         ifstream file(path);
@@ -202,6 +221,12 @@ public:
         return numbers;
     }
 
+    /**
+     *
+     * @param os - stream for writing
+     * @param tree - given binary search tree
+     * @return ostream with statistic information about the BST
+     */
     friend ostream &operator<<(ostream &os, BinaryTree &tree) {
         string avl = tree.isAvl() ? "yes" : "no";
         os << "avl: " << avl << endl;
@@ -211,18 +236,39 @@ public:
         return os;
     }
 
+    /**
+     *
+     * @return the first node in BST
+     */
     Node *getRoot() const {
         return root;
     }
 
+    /**
+     *
+     * @return if given tree is an AVL tree
+     */
     bool isAvl() const {
         return avl;
     }
 
 private:
+    /**
+     * value to check if the given tree is an AVL tree
+     * variable is set to true until the balanced gets checked and returns an AVL violation
+     */
     bool avl;
+    /**
+     * root node in the BST which stores further left and right elements
+     */
     Node *root;
+    /*
+     * vector to save the given numbers from a file
+     */
     vector<int> keys;
+    /*
+     * array for printing the BST
+     */
     int rec[1000006];
 };
 

@@ -29,6 +29,9 @@ public:
         if (root) delete root;
     }
 
+    /**
+     * initialize the tree given from a text file
+     */
     void initialize() {
         this->root->setKey(keys.front());
         this->keys.erase(keys.begin());
@@ -38,6 +41,11 @@ public:
         }
     }
 
+    /**
+     * create a new node in the tree
+     * @param key
+     * @return
+     */
     struct Node *newNode(int key) {
         struct Node *temp = new Node;
         temp->setKey(key);
@@ -47,9 +55,11 @@ public:
         return temp;
     };
 
-    /*
+    /**
      * root: cached root at current position
      * key: given value to insert into tree
+     * @param current
+     * @param key
      */
     void insert(Node *current, int key) {
         //check if node to insert is greater than already existing key node
@@ -73,7 +83,11 @@ public:
         }
     }
 
-    // compute height of the tree
+    /**
+     * compute height of the tree of a given node
+     * @param root
+     * @return
+     */
     int getHeight(Node *root) {
         if (root == NULL)
             return 0;
@@ -85,7 +99,11 @@ public:
         return 1 + max(leftHeight, rightHeight);
     }
 
-    //bal(k) = h(rechter Teilbaum) - h(linker Teilbaum)
+    /**
+     * bal(k) = h(rechter Teilbaum) - h(linker Teilbaum)
+     * @param root
+     * @return
+     */
     int getBalance(Node *root) {
         if (root == NULL)
             return 0;
@@ -105,46 +123,38 @@ public:
         return balance;
     }
 
-    // Returns maximum value in a given Binary Tree
+    /**
+     * Returns maximum value in a given Binary Tree
+     * @param root
+     * @return the maximum key node of the tree which is always the most right item
+     */
     int findMax(Node *root) {
-        // Base case
         if (root == NULL)
-            return INT_MIN;
+            return 0;
 
-        // Return maximum of 3 values:
-        // 1) Root's data 2) Max in Left Subtree
-        // 3) Max in right subtree
-        int result = root->getKey();
-        int leftResult = findMax(root->getLeft());
-        int rightResult = findMax(root->getRight());
+        int currentResult = root->getKey();
 
-        if (leftResult > result)
-            result = leftResult;
-        if (rightResult > result)
-            result = rightResult;
-
-        return result;
+        if (root->getRight() != NULL)
+            return findMax(root->getRight());
+        else
+            return currentResult;
     }
 
-    // Returns minimum value in a given Binary Tree
+    /**
+     * Returns minimum value in a given Binary Tree
+     * @param root - the head node of the tree given
+     * @return the minimum key node of the tree which is always the most left item
+     */
     int findMin(Node *root) {
-        // Base case
         if (root == NULL)
-            return INT_MAX;
+            return 0;
 
-        // Return minimum of 3 values:
-        // 1) Root's data 2) Max in Left Subtree
-        // 3) Max in right subtree
         int currentResult = root->getKey();
-        int leftResult = findMin(root->getLeft());
-        int rightResult = findMin(root->getRight());
 
-        if (leftResult < currentResult)
-            currentResult = leftResult;
-        if (rightResult < currentResult)
-            currentResult = rightResult;
-
-        return currentResult;
+        if (root->getLeft() != NULL)
+            return findMin(root->getLeft());
+        else
+            return currentResult;
     }
 
     /**
@@ -153,8 +163,8 @@ public:
      * @param root - root node of a given BST
      * @return the arithmetic mean
      */
-    double getAverage(Node *root){
-        return (double)sum(root)/getElements(root);
+    double getAverage(Node *root) {
+        return (double) sum(root) / getElements(root);
     }
 
     /**
@@ -163,8 +173,8 @@ public:
      * @param current - node where to start counting all realted elements
      * @return the value of all nodes related to the given root node
      */
-    int getElements(Node *current){
-        if(!current) return 0;
+    int getElements(Node *current) {
+        if (!current) return 0;
         return 1 + getElements(current->getRight()) + getElements(current->getLeft());
     }
 
@@ -174,8 +184,8 @@ public:
      * @param current - the point where to start summarizing the values
      * @return the sum of all related nodes from the given root node
      */
-    int sum(Node *current){
-        if(!current) return 0;
+    int sum(Node *current) {
+        if (!current) return 0;
         return current->getKey() + sum(current->getRight()) + sum(current->getLeft());
     }
 
@@ -185,21 +195,20 @@ public:
      * @param current node where the BST should be printed from
      * @param depth depth of the BST
      */
-    void printTree(struct Node* current, int depth=0)
-    {
+    void printTree(struct Node *current, int depth = 0) {
         int i;
-        if(current==NULL)return;
+        if (current == NULL)return;
         printf("\t");
-        for(i=0;i<depth;i++)
-            if(i==depth-1)
-                printf("%s\u2014\u2014\u2014",rec[depth-1]?"\u0371":"\u221F");
+        for (i = 0; i < depth; i++)
+            if (i == depth - 1)
+                printf("%s\u2014\u2014\u2014", rec[depth - 1] ? "\u0371" : "\u221F");
             else
-                printf("%s   ",rec[i]?"\u23B8":"  ");
-        printf("%d\n",current->getKey());
-        rec[depth]=1;
-        printTree(current->getLeft(),depth+1);
-        rec[depth]=0;
-        printTree(current->getRight(),depth+1);
+                printf("%s   ", rec[i] ? "\u23B8" : "  ");
+        printf("%d\n", current->getKey());
+        rec[depth] = 1;
+        printTree(current->getLeft(), depth + 1);
+        rec[depth] = 0;
+        printTree(current->getRight(), depth + 1);
     }
 
     /**
@@ -230,8 +239,8 @@ public:
     friend ostream &operator<<(ostream &os, BinaryTree &tree) {
         string avl = tree.isAvl() ? "yes" : "no";
         os << "avl: " << avl << endl;
-        os << "min: " << tree.findMin(tree.getRoot())<<", ";
-        os << "max: " << tree.findMax(tree.getRoot())<<", ";
+        os << "min: " << tree.findMin(tree.getRoot()) << ", ";
+        os << "max: " << tree.findMax(tree.getRoot()) << ", ";
         os << "average: " << tree.getAverage(tree.getRoot());
         return os;
     }

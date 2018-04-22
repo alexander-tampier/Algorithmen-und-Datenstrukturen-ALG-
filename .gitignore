@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/c++,clion+all
 
+### osX
+.DS_Store
+
 ### C++ ###
 # Prerequisites
 *.d
@@ -94,6 +97,13 @@ fabric.properties
 # See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
 
 .idea/
+
+### Lex & yacc Uebung03
+
+lex.yy.c
+y.tab.c
+y.tab.h
+calc
 
 
 # End of https://www.gitignore.io/api/c++,clion+all

@@ -43,16 +43,27 @@
      ASSIGN = 259,
      INTEGER = 260,
      NEWLINE = 261,
-     LB = 262,
-     RB = 263,
-     PLUS = 264,
-     MINUS = 265,
-     TIMES = 266,
-     DIVIDE = 267,
-     MODULO = 268,
-     UMIX = 269,
-     UMINUS = 270,
-     UPLUS = 271
+     MAX = 262,
+     MIN = 263,
+     COMMA = 264,
+     COLON = 265,
+     QUESTION = 266,
+     GREATER = 267,
+     GT = 268,
+     NOTEQ = 269,
+     EQ = 270,
+     LT = 271,
+     LESS = 272,
+     MINUS = 273,
+     PLUS = 274,
+     MODULO = 275,
+     DIVIDE = 276,
+     TIMES = 277,
+     UMIX = 278,
+     UMINUS = 279,
+     UPLUS = 280,
+     RB = 281,
+     LB = 282
    };
 #endif
 /* Tokens.  */
@@ -60,16 +71,27 @@
 #define ASSIGN 259
 #define INTEGER 260
 #define NEWLINE 261
-#define LB 262
-#define RB 263
-#define PLUS 264
-#define MINUS 265
-#define TIMES 266
-#define DIVIDE 267
-#define MODULO 268
-#define UMIX 269
-#define UMINUS 270
-#define UPLUS 271
+#define MAX 262
+#define MIN 263
+#define COMMA 264
+#define COLON 265
+#define QUESTION 266
+#define GREATER 267
+#define GT 268
+#define NOTEQ 269
+#define EQ 270
+#define LT 271
+#define LESS 272
+#define MINUS 273
+#define PLUS 274
+#define MODULO 275
+#define DIVIDE 276
+#define TIMES 277
+#define UMIX 278
+#define UMINUS 279
+#define UPLUS 280
+#define RB 281
+#define LB 282
 
 
 

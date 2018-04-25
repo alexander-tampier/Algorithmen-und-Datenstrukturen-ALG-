@@ -11,6 +11,7 @@ int sym[26];
 %left PLUS MINUS
 %left TIMES DIVIDE MODULO
 %left LB RB UPLUS UMINUS UMIX
+%nonassoc UMINUSS
 
 %%
 
@@ -46,6 +47,10 @@ expr: INTEGER            { $$ = $1; }
       | expr UMINUS expr    { $$ = $1 + $3; }
       | UMIX expr           { $$ = -$2; }
       | expr UMIX expr    { $$ = $1 - $3; }
+
+      | MINUS expr %prec UMINUSS    { $$ = -$2; }
+      | PLUS expr %prec UMINUSS    { $$ = $2; }
+
 
       | expr LESS expr   { $$ = $1<$3 ? 1 : 0; }
       | expr LT expr   { $$ = $1<=$3 ? 1 : 0; }

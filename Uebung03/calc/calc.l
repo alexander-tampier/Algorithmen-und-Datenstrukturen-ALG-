@@ -32,6 +32,9 @@ int hex();
 "("		return LB;
 ")"		return RB;
 
+"+"		return UPLUS;
+"-"		return UMIX;
+
 "++"	return UPLUS;
 "--"	return UMINUS;
 "+-"	return UMIX;

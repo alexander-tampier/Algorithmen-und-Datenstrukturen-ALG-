@@ -1,20 +1,31 @@
 #include <iostream>
 #include "commons/FileReader.h"
+#include "algo/NearestNeighbour.h"
 
-int main() {
-    std::string path;
-    std::cout << "filename: ";
-    std::cin >> path;
+int main(int argc, char *argv[]) {
+    try {
+        vector<Point *> values = FileReader::readFromFile(argv[2]);
 
-    try{
-        vector<Point*> values = FileReader::readFromFile(path.c_str());
-
-        for (Point *point : values) // access by reference to avoid copying
-        {
-            std::cout << *point <<"\n";
+        switch (argv[1][1]) {
+            case 'n':
+            {
+                NearestNeighbour *nearestNeighbour = new NearestNeighbour(values);
+                nearestNeighbour->initalizeMatrix();
+                nearestNeighbour->printMatrix();
+                nearestNeighbour->getMinimumDistance();
+                nearestNeighbour->printMinimumDistance();
+                nearestNeighbour->printWay();
+                break;
+            }
+            case 'e': {
+                // code here ..
+                break;
+            }
+            default:
+                break;
         }
-        
-    }catch(exception& e){
+
+    } catch (exception &e) {
         cout << "Standard exception: " << e.what() << endl;
     }
 

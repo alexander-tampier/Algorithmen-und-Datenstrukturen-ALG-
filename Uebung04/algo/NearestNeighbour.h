@@ -2,6 +2,7 @@
 // Created by Alexander Tampier on 25.05.18.
 //
 #include <cfloat>
+#include <stack>
 #include "TSP.h"
 
 #ifndef UEBUNG04_NEARESTNEIGHBOUR_H
@@ -18,7 +19,7 @@ public:
         vector<Point *> points = this->getValues();
 
         for (int row = 0; row < getSize(); row++) {
-            for (int col = row; col < getSize(); col++) {
+            for (int col = 0; col < getSize(); col++) {
                 this->setPoint(row, col, points.at(row), points.at(col));
             }
         }
@@ -28,69 +29,74 @@ public:
 
     void getMinimumDistance() {
         if (initialized) {
-            int startPoint = 1;
-            int nextRow = 0;
-            double temp = DBL_MAX;
-            double **matrix = getAdjazenzMatrix();
+            double **adjacencyMatrix = getAdjazenzMatrix();
+            int size = getSize();
 
-            //Give me the neighbour of the startpoint
-            getValues().at(0)->setVisited(true);
-            for (int row = 0; row < startPoint; row++) {
-                for (int col = row; col < getSize(); col++) {
-                    if (matrix[row][col] < temp && !getValues().at(col)->isVisited()) {
-                        temp = matrix[row][col];
-                        nextRow = col;
+            stack<int> stack;
+            std::vector<int> visited(size);
 
+            stack.push(0);
+
+            int destination = 0;
+            int element=0;
+            int i=0;
+
+            double min = DBL_MAX;
+            bool minFlag = false;
+
+            while (!stack.empty()) {
+                element = stack.top();
+                min = DBL_MAX;
+                for(int i=0; i<size; i++){
+                    if (adjacencyMatrix[element][i] != 0 && visited.at(i) == 0) {
+                        if (adjacencyMatrix[element][i] < min) {
+                            min = adjacencyMatrix[element][i];
+                            destination = i;
+                            minFlag = true;
+                        }
                     }
                 }
+                if (minFlag) {
+                    //set node to visited true
+                    visited.at(0) = 1;
+                    visited.at(destination) = 1;
+                    stack.push(destination);
+
+                    ways.push_back(element);
+                    ways.push_back(destination);
+
+                    minimumDistance.push_back(min);
+
+                    minFlag = false;
+                    continue;
+                }
+                stack.pop();
             }
-            getValues().at(nextRow)->setVisited(true);
-            minimumDistance.push_back(temp);
-            way.push_back(nextRow);
+            ways.push_back(destination);
+            ways.push_back(element);
 
-            temp = DBL_MAX;
-
-            for(int k=0; k<getSize()-2; k++){
-                for(int i=0; i<nextRow; i++){
-                    if(matrix[i][nextRow] < temp && !getValues().at(i)->isVisited()){
-                        temp = matrix[i][nextRow];
-                        nextRow = i;
-
-                    }
-                }
-
-                for(int z=nextRow;z<getSize();z++){
-                    if(matrix[nextRow][z] < temp && !getValues().at(z)->isVisited()){
-                        temp = matrix[nextRow][z];
-                        nextRow = z;
-
-                    }
-                }
-                getValues().at(nextRow)->setVisited(true);
-                minimumDistance.push_back(temp);
-                way.push_back(nextRow);
-            }
+            minimumDistance.push_back(adjacencyMatrix[element][destination]);
         }
     }
 
-    void printMinimumDistance(){
+    void printMinimumDistance() {
         cout << "Distances: ";
-        for(double distance : minimumDistance){
+        for (double distance : minimumDistance) {
             cout << distance << " ";
         }
-        cout<<endl;
+        cout << endl;
     }
 
-    void printWay(){
+    void printWay() {
         cout << "Ways: ";
-        for(int w : way){
-            cout << w << " ";
+        for (int i = 0; i < ways.size(); i += 2) {
+            cout << ways.at(i) << "->" << ways.at(i + 1) << " ";
         }
-        cout<<endl;
+        cout << endl;
     }
 
 private:
     vector<double> minimumDistance;
-    vector<int> way;
+    vector<int> ways;
     bool initialized = false;
 };
